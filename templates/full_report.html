@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Analysis results
+    </title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700|Raleway:300,400,400i,500,500i,700,800,900"
+        rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="../assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top d-flex align-items-center">
+        <div class="container d-flex justify-content-between">
+
+            <div class="logo">
+                <h1><a href="{{ url_for('index')}}"><span>D</span>eepFace</a></h1>
+            </div>
+
+            <nav id="navbar" class="navbar">
+                <ul>
+                    <li><a class="nav-link scrollto active" href="{{ url_for('index')}}">Home</a></li>
+
+                </ul>
+
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav>
+
+        </div>
+    </header><!-- End Header -->
+
+    <main id="main">
+
+        <!-- ======= Blog Header ======= -->
+        <div class="header-bg page-area">
+            <div class="container position-relative">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="slider-content text-center">
+                            <div class="header-bottom">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- End Blog Header -->
+
+
+        <!-- ======= Blog Page ======= -->
+        <div class="blog-page area-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-4">
+                        <div class="page-head-blog">
+                            <div class="single-blog-page">
+                                <center>
+                                    <h3>Analysis Results</h3>
+                                </center>
+                                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                                    <div class="container-fluid">
+                                        <a class="nav-link active" aria-current="page" href="#" onclick="showDiv('dashboard')">Dashboard</a>
+                                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+                                            aria-expanded="false" aria-label="Toggle navigation">
+                                            <span class="navbar-toggler-icon"></span>
+                                        </button>
+                                        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                                            <div class="navbar-nav">
+                                                {% if report.StaticObject.applicable %}
+                                                <a class="nav-link" href="#" onclick="showDiv('static')">Static</a>
+                                                {% endif %}
+                                                {% if report.ExifObject.applicable %}
+                                                <a class="nav-link" href="#" onclick="showDiv('exif')">EXIF</a>
+                                                {% endif %}
+                                                {% if report.PreviewObject.applicable %}
+                                                <a class="nav-link" href="#" onclick="showDiv('thumb')">Preview</a>
+                                                {% endif %}
+                                                {% if report.ELAObject.applicable %}
+                                                <a class="nav-link" href="#" onclick="showDiv('ela')">ELA</a>
+                                                {% endif %}
+                                                {% if report.LocalizationObject.applicable %}
+                                                <a class="nav-link" href="#" onclick="showDiv('gps')">GPS Localization</a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </nav>
+                            </div>
+
+                            <div id="dashboardDiv" class="col-md-12 col-sm-8 col-xs-12">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <table class="table table-dark table-hover">
+                                            <center>
+                                                <h3>   </h3>
+                                            </center>
+
+                                            <tbody>
+                                                <tr>
+                                                    <td>Type</td>
+                                                    <th scope="row">Result</th>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Static analysis</td>
+                                                    {% if report.StaticObject.applicable %}
+                                                    <th scope="row">Static data found</th>
+                                                    {% else %}
+                                                    <th scope="row">Static data not found</th>
+                                                    {% endif %}
+                                                </tr>
+
+                                                <tr>
+                                                    <td>EXIF metadata extraction </td>
+                                                    {% if report.ExifObject.applicable %}
+                                                    <th scope="row">EXIF Metadata found</th>
+                                                    {% else %}
+                                                    <th scope="row">EXIF Metadata not found</th>
+                                                    {% endif %}
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Preview extraction from metadata</td>
+                                                    {% if report.PreviewObject.applicable %}
+                                                    <th scope="row">Preview found</th>
+                                                    {% else %}
+                                                    <th scope="row">Preview not found</th>
+                                                    {% endif %}
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Error Level Analysis (ELA)</td>
+                                                    {% if report.ELAObject.applicable %}
+                                                    <th scope="row">ELA found</th>
+                                                    {% else %}
+                                                    <th scope="row">ELA not found</th>
+                                                    {% endif %}
+                                                </tr>
+
+                                                <tr>
+                                                    <td>GPS Localization</td>
+                                                    {% if report.LocalizationObject.applicable %}
+                                                    <th scope="row">GPS found</th>
+                                                    {% else %}
+                                                    <th scope="row">GPS not found</th>
+                                                    {% endif %}
+                                                </tr>
+                                                
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="staticDiv" class="col-md-8 col-sm-8 col-xs-12" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <a data-mdb-tab-init class="nav-link active" id="ex1-tab-1"
+                                                    href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1"
+                                                    aria-selected="true">static info</a>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <a data-mdb-tab-init class="nav-link" id="ex1-tab-2" href="#ex1-tabs-2"
+                                                    role="tab" aria-controls="ex1-tabs-2" aria-selected="false">File
+                                                    Type</a>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <a data-mdb-tab-init class="nav-link" id="ex1-tab-3" href="#ex1-tabs-3"
+                                                    role="tab" aria-controls="ex1-tabs-3"
+                                                    aria-selected="false">Hashes</a>
+                                            </li>
+                                        </ul>
+                                        <!-- Tabs navs -->
+
+                                        <!-- Tabs content -->
+                                        <div class="tab-content" id="ex1-content">
+                                            <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel"
+                                                aria-labelledby="ex1-tab-1">
+                                                <table class="table table-dark table-hover">
+                                                    <thead>
+                                                        <tr>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Type</td>
+
+                                                            <th scope="row">Value</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Dimensions</td>
+
+                                                            <th scope="row">[ {{
+                                                                report.StaticObject.result.Dimensions[0] }}, {{
+                                                                report.StaticObject.result.Dimensions[1] }} ]</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Analyzed at</td>
+
+                                                            <th scope="row">{{report.StaticObject.result.AnalyzedAt}}
+                                                            </th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel"
+                                                aria-labelledby="ex1-tab-2">
+                                                <table class="table table-dark table-hover">
+                                                    <thead>
+                                                        <tr>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Type</td>
+
+                                                            <th scope="row">{{report.StaticObject.result.Type}}</th>
+                                                        </tr>
+
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel"
+                                                aria-labelledby="ex1-tab-3">
+                                                <table class="table table-dark table-hover">
+                                                    <thead>
+                                                        <tr>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Type</td>
+
+                                                            <th scope="row">Value</th>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>SHA1</td>
+
+                                                            <th scope="row">{{report.StaticObject.result.SHA1}}</th>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>SHA224</td>
+
+                                                            <th scope="row">
+                                                                {{report.StaticObject.result.SHA224}}</th>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td>SHA384</td>
+
+                                                            <th scope="row">
+                                                                {{report.StaticObject.result.SHA384}}
+                                                            </th>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>CRC32</td>
+
+                                                            <th scope="row">{{report.StaticObject.result.CRC32}}</th>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td>SHA256</td>
+
+                                                            <th scope="row">
+                                                                {{report.StaticObject.result.SHA256}}
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>SHA512</td>
+
+                                                            <th scope="row">
+                                                                {{report.StaticObject.result.SHA512}}
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>MD5</td>
+
+                                                            <th scope="row">{{report.StaticObject.result.MD5}}</th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div id="exifDiv" class="col-md-8 col-sm-8 col-xs-12" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <ul class="nav nav-tabs mb-3" id="ex2" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <a data-mdb-tab-init class="nav-link active" id="ex2-tab-1"
+                                                    href="#ex2-tabs-1" role="tab" aria-controls="ex2-tabs-1"
+                                                    aria-selected="true">EXIF</a>
+                                            </li>
+                                        </ul>
+                                        <!-- Tabs navs -->
+
+                                        <!-- Tabs content -->
+                                        <div class="tab-content" id="ex2-content">
+                                            <div class="tab-pane fade show active" id="ex2-tabs-1" role="tabpanel"
+                                                aria-labelledby="ex2-tab-1">
+                                                <table class="table table-dark table-hover">
+     
+                                                    <tbody>
+                                                            <td>Analysis:</td>
+                                                            <th scope="row">{{ report.ExifObject.result.tags | safe }}
+                                                            </th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="elaDiv" class="col-md-8 col-sm-8 col-xs-12" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <ul class="nav nav-tabs mb-3" id="ex3" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <a data-mdb-tab-init class="nav-link active" id="ex3-tab-1"
+                                                    href="#ex3-tabs-1" role="tab" aria-controls="ex3-tabs-1"
+                                                    aria-selected="true">ELA</a>
+                                            </li>
+                                        </ul>
+                                        <!-- Tabs navs -->
+
+                                        <!-- Tabs content -->
+                                        <div class="tab-content" id="ex3-content">
+                                            <div class="tab-pane fade show active" id="ex3-tabs-1" role="tabpanel"
+                                                aria-labelledby="ex3-tab-1">
+                                                <table class="table table-dark table-hover">
+                                                    <thead>
+                                                        <tr>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Type</td>
+
+                                                            <th scope="row">Value</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>ELA Image</td>
+                                                            <th scope="row">
+                                                                {% set ela_image_path = 'uploads/' +
+                                                                report.ELAObject.result.ela_file_path %}
+                                                                <img src="{{ url_for('static', filename=ela_image_path) }}" alt="ELA Image">
+                                                            </th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="thumbDiv" class="col-md-8 col-sm-8 col-xs-12" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <ul class="nav nav-tabs mb-3" id="ex4" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <a data-mdb-tab-init class="nav-link active" id="ex4-tab-1"
+                                                    href="#ex4-tabs-1" role="tab" aria-controls="ex4-tabs-1"
+                                                    aria-selected="true">Preview</a>
+                                            </li>
+                                        </ul>
+                                        <!-- Tabs navs -->
+
+                                        <!-- Tabs content -->
+                                        <div class="tab-content" id="ex4-content">
+                                            <div class="tab-pane fade show active" id="ex4-tabs-1" role="tabpanel"
+                                                aria-labelledby="ex4-tab-1">
+                                                <table class="table table-dark table-hover">
+                                                    <thead>
+                                                        <tr>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Type</td>
+
+                                                            <th scope="row">Value</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Preview Image</td>
+                                                            <th scope="row">
+                                                                {% set ela_image_path = 'uploads/' +
+                                                                report.PreviewObject.result.thumbnail_path %}
+                                                                <img src="{{ url_for('static', filename=ela_image_path) }}"
+                                                                    alt="ELA Image">
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Size</td>
+                                                            <th scope="row">{{ report.PreviewObject.result.size }} bytes
+                                                            </th>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Mime Type</td>
+                                                            <th scope="row">{{ report.PreviewObject.result.mime_type }}
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Dimensions</td>
+                                                            <th scope="row">[ {{
+                                                                report.PreviewObject.result.dimensions[0] }}, {{
+                                                                report.PreviewObject.result.dimensions[1] }} ]</th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="gpsDiv" class="col-md-8 col-sm-8 col-xs-12" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <ul class="nav nav-tabs mb-3" id="ex5" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <a data-mdb-tab-init class="nav-link active" id="ex5-tab-1"
+                                                    href="#ex5-tabs-1" role="tab" aria-controls="ex5-tabs-1"
+                                                    aria-selected="true">GPS Localization</a>
+                                            </li>
+                                        </ul>
+                                        <!-- Tabs navs -->
+
+                                        <!-- Tabs content -->
+                                        <div class="tab-content" id="ex5-content">
+                                            <div class="tab-pane fade show active" id="ex5-tabs-1" role="tabpanel"
+                                                aria-labelledby="ex5-tab-1">
+                                                <table class="table table-dark table-hover">
+
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Type</td>
+
+                                                            <th scope="row">Value</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Latitide (N)</td>
+                                                            <th scope="row" data-lat>{{ report.LocalizationObject.result.lat }}</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Longitude (E)</td>
+                                                            <th scope="row" data-lng>{{ report.LocalizationObject.result.lng }}</th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                
+                                                <button type="button" id="openMapButton" class="btn btn-get-started scrollto animate__animated animate__fadeInUp">Open Google Map</button>
+
+                                                <script>
+                                                    // Listen for a click on the "Open Google Map" button
+                                                    document.getElementById('openMapButton').addEventListener('click', function () {
+                                                        // Extract latitude and longitude values from the table
+                                                        var latitude = document.querySelector('th[data-lat]').textContent;
+                                                        var longitude = document.querySelector('th[data-lng]').textContent;
+                                                        
+                                                        // Build a Google Maps link using the coordinates
+                                                        var googleMapURL = 'https://www.google.com/maps?q=' + latitude + ',' + longitude;
+                                                        
+                                                        // Use window.open to open the link in a new window/tab
+                                                        window.open(googleMapURL, '_blank');
+                                                    });
+                                                </script>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- End Blog Page -->
+
+    <div id="preloader"></div>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="../assets/vendor/php-email-form/validate.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="../assets/js/main.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.umd.min.js"></script>
+
+    <script>
+        function showDiv(divId) {
+            // Hide all divs
+            document.getElementById('dashboardDiv').style.display = 'none';
+            document.getElementById('staticDiv').style.display = 'none';
+            document.getElementById('exifDiv').style.display = 'none';
+            document.getElementById('thumbDiv').style.display = 'none';
+            document.getElementById('elaDiv').style.display = 'none';
+            document.getElementById('gpsDiv').style.display = 'none';
+
+            // Show the selected div
+            document.getElementById(divId + 'Div').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

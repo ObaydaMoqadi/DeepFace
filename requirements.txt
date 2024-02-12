@@ -1,0 +1,9 @@
+ExifRead==3.0.0
+Flask==3.0.0
+matplotlib==3.8.2
+numpy==1.26.3
+opencv_python==4.9.0.80
+Pillow==10.2.0
+progressbar33==2.4
+scipy==1.11.4
+Werkzeug==3.0.1

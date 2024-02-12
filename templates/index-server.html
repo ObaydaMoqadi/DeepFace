@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>DeepFace</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700|Raleway:300,400,400i,500,500i,700,800,900"
+        rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="../assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top d-flex align-items-center">
+        <div class="container d-flex justify-content-between">
+
+            <div class="logo">
+                <h1><a href="{{ url_for('index')}}"><span>D</span>eepFace</a></h1>
+
+            </div>
+
+            <nav id="navbar" class="navbar">
+                <ul>
+                    <li><a class="nav-link scrollto active" style="display: -ms-flexbox;" href="#hero">Home</a></li>
+
+                    <li><a class="nav-link scrollto" href="#about">About</a></li>
+
+                    <li><a class="nav-link scrollto" href="#example">Examples</a></li>
+
+                    <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav><!-- .navbar -->
+
+        </div>
+    </header><!-- End Header -->
+
+    <!-- ======= hero Section ======= -->
+
+    <section id="hero">
+        <div class="hero-container">
+            <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+
+                <div class="carousel-inner" role="listbox">
+
+                    <div class="carousel-item active" style="background-image: url(assets/img/11.jpg)">
+                        <div class="carousel-container">
+                            <div class="container">
+                                <h2 class="animate__animated animate__fadeInDown">Automated image forensic analysis</h2>
+                                <p class="animate__animated animate__fadeInUp">images contained tons of information also known as metadata</p>
+                                <form id="analyzeForm" action="/analyze" method="post" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label for="photoUpload" class="animate__animated animate__fadeInDown">
+                                            <h2>Photo Upload</h2>
+                                        </label>
+                                        <input type="file" class="form-control" id="photoUpload" name="photoUpload"
+                                            aria-describedby="emailHelp">
+                                    </div>
+                                    <button type="submit" id="submitBtn"
+                                        class="btn btn-get-started scrollto animate__animated animate__fadeInUp">Analyze</button>
+                                        <div id="messageContainer" class="alert" style="display:none; margin-top: 20px;"></div>
+                                </form>
+
+                                <script>
+                                    document.getElementById('analyzeForm').addEventListener('submit', function (event) {
+                                    event.preventDefault();
+
+                                    var messageContainer = document.getElementById('messageContainer');
+                                    messageContainer.style.display = 'none';
+                                    messageContainer.classList.remove('alert-success', 'alert-danger');
+
+                                    var fileInput = document.getElementById('photoUpload');
+                                    if (!fileInput.files.length) {
+                                        displayMessage('Please select a file.', 'alert-danger');
+                                        return;
+                                    }
+
+                                    var file = fileInput.files[0];
+                                    var allowedTypes = [
+                                        'image/png', 'image/jpeg', 'image/jpg', 'image/gif',
+                                        'image/bmp', 'image/x-canon-cr2', 'image/x-canon-crw', 'image/x-eps', 'image/x-nikon-nef',
+                                        'application/postscript', 'image/x-minolta-mrw', 'image/x-olympus-orf', 'image/x-photoshop', 'image/x-fuji-raf',
+                                        'image/x-panasonic-raw2', 'image/x-tga', 'image/tiff', 'image/pjpeg', 'image/x-x3f', 'image/x-portable-pixmap'
+                                    ];
+                                    if (!allowedTypes.includes(file.type)) {
+                                        displayMessage('Invalid file type. Only specific image types are allowed.', 'alert-danger');
+                                        return;
+                                    }
+
+                                    document.getElementById('submitBtn').disabled = true;
+                                    var formData = new FormData(this);
+
+                                    fetch('/analyze', {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            displayMessage('Image successfully analyzed.', 'alert-success');
+                                            window.location.href = '/report_result';
+                                        } else {
+                                            displayMessage('Error in submitting analysis request.', 'alert-danger');
+                                        }
+                                        document.getElementById('submitBtn').disabled = false;
+                                    })
+                                    .catch(error => {
+                                        console.error(error);
+                                        displayMessage('An error occurred.', 'alert-danger');
+                                        document.getElementById('submitBtn').disabled = false;
+                                    });
+                                });
+                                function displayMessage(message, className) {
+                                var messageContainer = document.getElementById('messageContainer');
+                                messageContainer.textContent = message;
+                                messageContainer.classList.add('alert', className); 
+                                messageContainer.style.display = 'block'; 
+                                messageContainer.style.opacity = '1'; 
+                                messageContainer.style.top = '20px'; 
+
+                                setTimeout(function() {
+                                    messageContainer.style.opacity = '0'; 
+                                    setTimeout(function() { 
+                                        messageContainer.style.display = 'none';
+                                    }, 500); 
+                                }, 4000);
+                            }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Hero Section -->
+
+    <main id="main">
+
+        <!-- ======= About Section ======= -->
+
+        <div id="about" style="background-color: #f3f3f3 ;" class="about-area area-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="section-headline text-center">
+                            <h2 style="color: #333333;">About DeepFace</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-20 col-sm-12 col-xs-12">
+                        <div class="well-middle">
+                            <div class="single-well text-center ">
+                                    Despite numerous tools exist to perform forensics investigations on images, they lack features and are generally buggy.
+
+                                <p style="color: #333333;">
+                                    This site is meant to address these issues and offer a stable and reliable service for forensics investigators and security professionals.</p>
+                                <ul>
+                                    <h4 class="sec-head" style="color: #333333;">So this application borns, it was designed with the following goals:</h4>
+                                    <li style="color: #333333;"><i class="bi bi-check"></i> Free: Give out the application free for all, without advertisements. </li>
+                                    <li style="color: #333333;"><i class="bi bi-check"></i> Forensic techniques all-in-one: Deliver the main image forensics techniques in one application.</li>
+                                    <li style="color: #333333;"><i class="bi bi-check"></i> Privacy: The uploaded photo and reports are private. The report is accessible only with knowledge of its direct link. </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- End About Section -->
+
+
+        <div class="reviews-area">
+            <div class="row g-0">
+                <div class="col-lg-6">
+                    <img src="assets\img\2.jpg" alt="" class="img-fluid"
+                        style="width: 1100px; height: auto; background-color: #acacac;">
+                </div>
+                <div class="col-lg-6 work-right-text d-flex align-items-center">
+                    <div class="px-5 py-5 py-lg-0">
+                        <h2>To report bugs, suggest new features, or something else just contact us </h2>
+                        <h5> Any kind of feedback is always welcome.</h5>
+                        <a href="#contact" class="ready-btn scrollto">Contact us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Examples -->
+        <div id="example" style="background-color: #f3f3f3; padding: px;" class="example-area">
+            <!-- Current Examples Section -->
+            <div id="new-example" style="background-color: #f0f2f5; padding: 20px;" class="example-area">
+                <div class="example-inner area-padding">
+                    <div class="example-overly"></div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="section-headline text-center" style="margin-top:20px;">
+                                    <h2>EXAMPLES ANALYSIS</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- First Example -->
+                            <div class="col-md-4 col-sm-4 col-xs-6" style="padding-left:50px;">
+                                <div class="single-example">
+                                    <div class="single-example-img">
+                                        <a href="#" onclick="submitImageSaved('Painting.jpg')">
+                                            <img src="assets\img\painting.jpg" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="example-meta">
+                                        <span class="comments-type">
+                                            <i class="fa fa-comment-o"></i>
+                                        </span>
+                                        <span class="date-type">
+                                            <i class="fa fa-calendar"></i>2023-03-05 / 09:08:16
+                                        </span>
+                                    </div>
+                                    <div class="example-text">
+                                        <h4>
+                                            <a href="#" onclick="submitImageSaved('Painting.jpg')">Painting</a>
+                                        </h4>
+                                    </div>
+                                    <span>
+                                        <a href="#" onclick="submitImageSaved('Painting.jpg')" class="ready-btn"
+                                            style="background-color: #1b1b1b; color: #ffffff;">Result</a>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- second Example -->
+                            <div class="col-md-4 col-sm-4 col-xs-6" style="padding-left:50px;">
+                                <div class="single-example">
+                                    <div class="single-example-img">
+                                        <a href="#" onclick="submitImageSaved('Flower.jpg')">
+                                            <img src="assets\img\Flower.jpg" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="example-meta">
+                                        <span class="comments-type">
+                                            <i class="fa fa-comment-o"></i>
+                                        </span>
+                                        <span class="date-type">
+                                            <i class="fa fa-calendar"></i>2022-02-05 / 03:10:11
+                                        </span>
+                                    </div>
+                                    <div class="example-text">
+                                        <h4>
+                                            <a href="#" onclick="submitImageSaved('Flower.jpg')">Flower</a>
+                                        </h4>
+                                    </div>
+                                    <span>
+                                        <a href="#" onclick="submitImageSaved('Flower.jpg')" class="ready-btn"
+                                            style="background-color: #1b1b1b; color: #ffffff;">Result</a>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- therd Example -->
+                            <div class="col-md-4 col-sm-4 col-xs-6" style="padding-left:50px;">
+                                <div class="single-example">
+                                    <div class="single-example-img">
+                                        <a href="#" onclick="submitImageSaved('loc.jpg')">
+                                            <img src="assets/img/loc.jpg" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="example-meta">
+                                        <span class="comments-type">
+                                            <i class="fa fa-comment-o"></i>
+                                        </span>
+                                        <span class="date-type">
+                                            <i class="fa fa-calendar"></i>2023-05-01 / 05:09:11
+                                        </span>
+                                    </div>
+                                    <div class="example-text">
+                                        <h4>
+                                            <a href="#" onclick="submitImageSaved('loc.jpg')">Piazza Italy</a>
+                                        </h4>
+                                    </div>
+                                    <span>
+                                        <a href="#" onclick="submitImageSaved('loc.jpg')" class="ready-btn"
+                                            style="background-color: #1b1b1b; color: #ffffff;">Result</a>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <script>
+                                function submitImageSaved(imageName) {
+                                    // Get the current image source
+                                    var currentImageSrc = "assets/img/" + imageName;
+                                    // Create a FormData object
+                                    var formData = new FormData();
+                            
+                                    // Fetch the image file based on the image source
+                                    fetch(currentImageSrc)
+                                        .then(response => response.blob())
+                                        .then(blob => {
+                                            // Append the image file to the FormData object
+                                            formData.append('photoUpload', blob, imageName);
+                            
+                                            // Make a POST request to the '/analyze' endpoint
+                                            fetch('/analyze', {
+                                                method: 'POST',
+                                                body: formData
+                                            })
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    // Check if the response indicates success
+                                                    if (data.success) {
+                                                        // If successful, redirect to '/report_result'
+                                                        window.location.href = '/report_result';
+                                                    } else {
+                                                        // Handle the error or display a message
+                                                        console.error('Error in submitting analysis request');
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    // Handle errors and re-enable the submit button
+                                                    console.error(error);
+                                                });
+                                        })
+                                        .catch(error => {
+                                            console.error('Error fetching image: ' + error);
+                                        });
+                                }
+                            </script>                            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Examples Section -->
+
+            <!-- center image  -->
+
+            <div style="background-color: black;">
+
+                <div class="well-left">
+                    <div class="single-well">
+                        <img src="assets/img/1090.jpg">
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start contact -->
+            <div id="contact" style="background-color: #f3f3f3  ;" class="contact-area">
+                <div class="contact-inner area-padding">
+                    <div class="contact-overly"></div>
+                    <div class="container ">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="section-headline text-center">
+                                    <h2>Contact us</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- Start contact icon column -->
+                            <div class="col-md-4">
+                                <div class="contact-icon text-center">
+                                    <div class="single-icon">
+                                        <i class="bi bi-phone"></i>
+                                        <p>
+                                            Call: +970 597398635<br>
+                                            <span>Monday-Friday (9am-5pm)</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Start contact icon column -->
+                            <div class="col-md-4">
+                                <div class="contact-icon text-center">
+                                    <div class="single-icon">
+                                        <i class="bi bi-envelope"></i>
+                                        <p>
+                                            Email: DeepFacePs@gmail.com<br>
+                                            <span>Web: www.DeepFacePs.com</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Start contact icon column -->
+                            <div class="col-md-4">
+                                <div class="contact-icon text-center">
+                                    <div class="single-icon">
+                                        <i class="bi bi-geo-alt"></i>
+                                        <p>
+                                            Location: Jenin - Palestine<br>
+                                            <span>P.O Box 240 </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <!-- Start Google Map -->
+                            <div class="row">
+                                <!-- Start Map -->
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d85521.86229061773!2d35.29916302293667!3d32.44024474090692!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151cfbd46b065def%3A0xd72f506cb984d61a!2sArab%20American%20University!5e0!3m2!1sen!2sus!4v1703618516355!5m2!1sen!2sus"
+                                    width="100%" height="380" frameborder="0" style="border:0" allowfullscreen></iframe>
+                                <!-- End Map -->
+                            </div>
+                            <!-- End Google Map -->
+
+                            <!-- Start  contact -->
+                            <div class="row">
+                                <div class="form contact-form">
+                                    <form action="{{ url_for('handle_contact') }}" method="post" role="form" class="php-email-form">
+                                        <div class="form-group">
+                                            <input type="text" name="name" class="form-control" id="name"
+                                                placeholder="Your Name" required style="background-color: #DDE1E7;">
+                                        </div>
+                                        <div class="form-group mt-3">
+                                            <input type="email" class="form-control" name="email" id="email"
+                                                placeholder="Your Email" required style="background-color: #DDE1E7;">
+                                        </div>
+                                        <div class="form-group mt-3">
+                                            <input type="text" class="form-control" name="subject" id="subject"
+                                                placeholder="Subject" required style="background-color: #DDE1E7;">
+                                        </div>
+                                        <div class="form-group mt-3">
+                                            <textarea class="form-control" name="message" rows="5" placeholder="Message"
+                                                required style="background-color: #DDE1E7;"></textarea>
+                                        </div>
+                                        <div class="my-3">
+                                            <div class="loading">Loading</div>
+                                            <div class="error-message"></div>
+                                            <div class="sent-message">Your message has been sent. Thank you!</div>
+                                        </div>
+                                        <div class="text-center"><button type="submit"
+                                                style="background-color: #1b1b1b;  color: #ffffff;">Send Message</button> </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- End Left contact -->
+                        </div>
+                    </div>
+                </div>
+            </div><!-- End Contact Section -->
+
+    </main>
+    <!-- End #main -->
+
+    <!-- start Testimonials Section -->
+
+    <div id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="testimonials-slider swiper">
+                <div class="swiper-wrapper">
+
+                    <div class="swiper-slide">
+                        <div class="testimonial-item">
+                            <img src="assets/img/testimonials-1.jpg" class="testimonial-img" alt="">
+                            <h3>Obayda Moqadi</h3>
+                            <h4>Manager</h4>
+                            <p>
+                                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                                Expert Computer Network & Information security Computer
+                                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                            </p>
+                        </div>
+                    </div>
+                     <div class="swiper-slide">
+                        <div class="testimonial-item">
+                            <img src="assets/img/testimonials-2.jpg" class="testimonial-img" alt="">
+                            <h3>Saleh Ghawanem </h3>
+                            <h4>Manager</h4>
+                            <p>
+                                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                                Expert Computer Network & Information security Computer
+                                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                            </p>
+                        </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="testimonial-item">
+                        <img src="assets/img/testimonials-3.jpg" class="testimonial-img" alt="">
+                        <h3>Muath Sabha </h3>
+                        <h4>Supervisor</h4>
+                        <p>
+                            <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                            Assistant Professor in Multimedia Technology,Computer Engineering Arab American University
+                            <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+
+    </div>
+    </div>
+    <!-- End Testimonials Section -->
+
+    <!-- ======= Footer ======= -->
+    <footer>
+        <center>
+            <div class="footer-area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="footer-content">
+                                <div class="footer-head">
+                                    <div class="footer-logo">
+                                        <h2><span>D</span>eepFace</h2>
+                                    </div>
+
+                                    <p>THE FIRST APPLICATION IN PALESTINE FOR ANALYSIS images .</p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="footer-content">
+                                <div class="footer-head">
+                                    <center>
+                                        <div class="footer-icons">
+                                            <ul>
+                                                <li>
+                                                    <a href="#"><i class="bi bi-facebook"></i></a>
+                                                </li>
+                                                <li>
+                                                    <a href="#"><i class="bi bi-twitter"></i></a>
+                                                </li>
+                                                <li>
+                                                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end single footer -->
+                        <div class="col-md-4">
+                            <div class="footer-content">
+                                <div class="footer-head">
+                                    <h4>information</h4>
+                                    <div class="footer-contacts">
+                                        <p><span>Tel:</span> +970 597398635 -<span> Email:</span> DeepFacePs@gmail.com</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end single footer -->
+
+                    </div>
+                </div>
+            </div>
+            <div class="footer-area-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="copyright text-center">
+                                <p>&copy; 2023 DeepFace. All Rights Reserved.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </center>
+    </footer><!-- End  Footer -->
+
+    <div id="preloader"></div>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="../assets/vendor/php-email-form/validate.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="../assets/js/main.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.umd.min.js"></script>
+</body>
+
+</html>
